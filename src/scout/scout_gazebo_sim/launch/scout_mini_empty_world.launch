@@ -1,0 +1,28 @@
+<launch>
+
+    <arg name="robot_namespace" default="/"/>
+
+    <!-- Load the surrounding environment into Gazebo -->
+    <arg name="world_name" default="$(find scout_gazebo_sim)/worlds/weston_robot_empty.world"/>
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+    
+    <!-- Spawn the Scout Mini robot -->
+    <include file="$(find scout_gazebo_sim)/launch/spawn_scout_mini.launch"></include>
+        
+    <!-- Launch RViz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find scout_description)/rviz/navigation.rviz" />
+
+    <!-- Launch Odometry Publisher -->
+    <node name="gazebo_odometry_publisher" pkg="circle_motion" type="odom" output="screen">
+        <param name="robot_name" value="scout/"/> <!-- Robot name in Gazebo -->
+    </node>
+
+</launch>
+
